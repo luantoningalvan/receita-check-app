@@ -4,15 +4,13 @@ import { CheckboxContainer, ItemContainer, ItemText } from "./styles";
 
 interface CheckboxProps {
   label: string;
+  checked: boolean;
   onChange?: (checked: boolean) => void;
 }
 
-export function Checkbox({ label, onChange }: CheckboxProps) {
-  const [active, setActive] = React.useState(false);
-
+export function Checkbox({ label, onChange, checked }: CheckboxProps) {
   function handleChange() {
-    setActive(!active);
-    typeof onChange === "function" && onChange(!active);
+    typeof onChange === "function" && onChange(!checked);
   }
 
   return (
@@ -20,8 +18,8 @@ export function Checkbox({ label, onChange }: CheckboxProps) {
       onPress={handleChange}
       style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
     >
-      <CheckboxContainer active={active} onPress={handleChange}>
-        {active && <Check size={24} color="#fff" />}
+      <CheckboxContainer active={checked} onPress={handleChange}>
+        {checked && <Check size={24} color="#fff" />}
       </CheckboxContainer>
       <ItemText>{label}</ItemText>
     </ItemContainer>

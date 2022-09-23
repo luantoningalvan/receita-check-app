@@ -14,8 +14,20 @@ import { MagnifyingGlass, Microphone } from "phosphor-react-native";
 import { View } from "react-native";
 import { RecipeCard } from "../../components/RecipeCard";
 import { RECIPES } from "../../assets/recipes";
+import axios from "axios";
 
 export function Recipes() {
+  const [recipes, setRecipes] = React.useState([]);
+
+  async function fetchRecipes() {
+    const result = await axios.get("http://192.168.0.103:3000/recipes");
+    setRecipes(result.data);
+  }
+
+  React.useEffect(() => {
+    fetchRecipes();
+  }, []);
+
   return (
     <Container>
       <RecipesList
@@ -50,7 +62,7 @@ export function Recipes() {
             </View>
           </>
         }
-        data={RECIPES}
+        data={recipes}
         numColumns={2}
         columnWrapperStyle={{ justifyContent: "space-between" }}
         renderItem={({ item }) => <RecipeCard recipe={item} />}

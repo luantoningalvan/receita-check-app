@@ -22,10 +22,22 @@ import { theme } from "../../styles/theme";
 
 export function ViewRecipe(props: any) {
   const recipe: Recipe = props.route.params.recipe;
-  const [done, setDone] = useState<string[]>([]);
+  const [ingredientsDone, setIngredientsDone] = useState<string[]>([]);
+  const [stepsDone, setStepsDone] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = React.useState("ingredients");
 
-  function handleDone(ingredient: string) {
-    setDone((state) => {
+  function handleIngredientDone(ingredient: string) {
+    setIngredientsDone((state) => {
+      if (state.includes(ingredient)) {
+        return state.filter((ig) => ig !== ingredient);
+      } else {
+        return [...state, ingredient];
+      }
+    });
+  }
+
+  function handleStepDone(ingredient: string) {
+    setStepsDone((state) => {
       if (state.includes(ingredient)) {
         return state.filter((ig) => ig !== ingredient);
       } else {
@@ -69,41 +81,78 @@ export function ViewRecipe(props: any) {
           </RecipeCheck>
         </RecipeInfos>
 
-        <FloatingCounter>
-          <CircularProgress
-            maxValue={recipe.ingredients.length}
-            value={done.length}
-            radius={35}
-            activeStrokeColor={theme.orange}
-            inActiveStrokeColor={theme.orangeLight}
-            rotation={180}
-            duration={150}
-            progressFormatter={() => {
-              "worklet";
-
-              return `${done.length}/${recipe.ingredients.length}`;
-            }}
-          />
-        </FloatingCounter>
-
         <Tabs
-          initialActive="ingredients"
+          activeTab={activeTab}
+          onChange={(tab) => setActiveTab(tab)}
           tabs={[
             { label: "Ingredientes", value: "ingredients" },
             { label: "Modo de preparo", value: "steps" },
           ]}
         />
 
-        <IngredientsList
-          data={recipe.ingredients}
-          renderItem={({ item }) => (
-            <Checkbox
-              label={item}
-              key={item}
-              onChange={() => handleDone(item)}
+        {activeTab === "ingredients" && (
+          <>
+            <IngredientsList
+              data={recipe.ingredients}
+              renderItem={({ item }) => (
+                <Checkbox
+                  label={item}
+                  key={item}
+                  checked={ingredientsDone.includes(item)}
+                  onChange={() => handleIngredientDone(item)}
+                />
+              )}
             />
-          )}
-        />
+            <FloatingCounter>
+              <CircularProgress
+                maxValue={recipe.ingredients.length}
+                value={ingredientsDone.length}
+                radius={35}
+                activeStrokeColor={theme.orange}
+                inActiveStrokeColor={theme.orangeLight}
+                rotation={180}
+                duration={150}
+                progressFormatter={() => {
+                  "worklet";
+
+                  return `${ingredientsDone.length}/${recipe.ingredients.length}`;
+                }}
+              />
+            </FloatingCounter>
+          </>
+        )}
+
+        {activeTab === "steps" && (
+          <>
+            <IngredientsList
+              data={recipe.steps}
+              renderItem={({ item, index }) => (
+                <Checkbox
+                  label={`${index + 1}. ${item}`}
+                  key={item}
+                  checked={stepsDone.includes(item)}
+                  onChange={() => handleStepDone(item)}
+                />
+              )}
+            />
+            <FloatingCounter>
+              <CircularProgress
+                maxValue={recipe.steps.length}
+                value={stepsDone.length}
+                radius={35}
+                activeStrokeColor={theme.orange}
+                inActiveStrokeColor={theme.orangeLight}
+                rotation={180}
+                duration={150}
+                progressFormatter={() => {
+                  "worklet";
+
+                  return `${stepsDone.length}/${recipe.steps.length}`;
+                }}
+              />
+            </FloatingCounter>
+          </>
+        )}
       </Paper>
     </Container>
   );
