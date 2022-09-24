@@ -19,6 +19,9 @@ import {
   UsersThree,
   CaretLeft,
   BookmarkSimple,
+  X,
+  ThumbsUp,
+  ThumbsDown,
 } from "phosphor-react-native";
 import { Tabs } from "../../components/Tabs";
 import { Checkbox } from "../../components/Checkbox";
@@ -27,12 +30,15 @@ import CircularProgress from "react-native-circular-progress-indicator";
 import { theme } from "../../styles/theme";
 import { IconButton } from "../../components/IconButton";
 import { SaveRecipeButton } from "../../components/SaveRecipeButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ingredient } from "../../common/interfaces/Ingredient";
 
 export function ViewRecipe(props: any) {
   const recipe: Recipe = props.route.params.recipe;
   const [ingredientsDone, setIngredientsDone] = useState<string[]>([]);
   const [stepsDone, setStepsDone] = useState<string[]>([]);
   const [activeTab, setActiveTab] = React.useState("ingredients");
+  const [candDoIt, setCanDoIt] = React.useState(false);
 
   function handleIngredientDone(ingredient: string) {
     setIngredientsDone((state) => {
@@ -53,6 +59,26 @@ export function ViewRecipe(props: any) {
       }
     });
   }
+
+  React.useEffect(() => {
+    const fetchIngredients = AsyncStorage.getItem("ingredients").then(
+      (result) => {
+        if (result) {
+          const parseIngredients = JSON.parse(result).map(
+            (item: Ingredient) => item.id
+          );
+
+          setCanDoIt(
+            recipe.ingredientsRef.every((elem) =>
+              parseIngredients.includes(elem)
+            )
+          );
+        } else {
+          setCanDoIt(false);
+        }
+      }
+    );
+  }, []);
 
   return (
     <Container>
@@ -96,8 +122,12 @@ export function ViewRecipe(props: any) {
             >{`${recipe.portions} porções`}</Text>
           </Info>
 
-          <RecipeCheck>
-            <Check color="#fff" size={22} />
+          <RecipeCheck state={candDoIt}>
+            {candDoIt ? (
+              <ThumbsUp color="#fff" size={22} />
+            ) : (
+              <ThumbsDown color="#fff" size={22} />
+            )}
           </RecipeCheck>
         </RecipeInfos>
 

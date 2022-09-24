@@ -46,10 +46,10 @@ export const Info = styled.View`
   margin-right: 16px;
 `;
 
-export const RecipeCheck = styled.View`
+export const RecipeCheck = styled.View<{ state: boolean }>`
   width: 28px;
   height: 28px;
-  background: #3bc651;
+  background: ${({ state }) => (state ? "#3bc651" : "#D8A729")};
   border-radius: 14px;
   align-items: center;
   justify-content: center;
