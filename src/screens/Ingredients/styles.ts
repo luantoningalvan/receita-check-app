@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
 import { FlatListProps } from "react-native";
 import { FlatList } from "react-native";
-import { Ingredient } from "../../assets/ingredients";
+import { Ingredient } from "../../common/interfaces/Ingredient";
 
 export const Container = styled(SafeAreaView)`
   flex: 1;
@@ -66,4 +66,16 @@ export const ListItemText = styled.Text`
   margin-left: 12px;
   font-size: ${RFValue(15)}px;
   flex: 1;
+`;
+
+export const EmptyList = styled.View`
+  padding: 32px;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const EmptyListTitle = styled.Text`
+  font-size: ${RFValue(14)}px;
+  font-weight: bold;
+  text-align: center;
 `;

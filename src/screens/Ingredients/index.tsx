@@ -11,14 +11,40 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  EmptyList,
+  EmptyListTitle,
 } from "./styles";
-import { INGRENDIENTS } from "../../assets/ingredients";
 import { AddIngredients } from "../AddIngredients";
-import { RectButton } from "react-native-gesture-handler";
 import { theme } from "../../styles/theme";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native";
+import { Ingredient } from "../../common/interfaces/Ingredient";
 
 export function Ingredients() {
   const [showAddIngredients, setShowAddIngredients] = React.useState(false);
+  const [ingredients, setIngredients] = React.useState<Ingredient[]>([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      AsyncStorage.getItem("ingredients").then((data) => {
+        if (data) {
+          setIngredients(JSON.parse(data));
+        }
+      });
+    }, [showAddIngredients])
+  );
+
+  const handleRemove = React.useCallback(
+    async (item: Ingredient) => {
+      const newList = ingredients.filter(
+        (ingredient) => ingredient.id !== item.id
+      );
+      setIngredients(newList);
+      await AsyncStorage.setItem("ingredients", JSON.stringify(newList));
+    },
+    [ingredients]
+  );
 
   return (
     <Container>
@@ -36,15 +62,22 @@ export function Ingredients() {
 
       <Paper>
         <IngredientsList
-          data={INGRENDIENTS}
+          data={ingredients}
           keyExtractor={(item) => String(item.id)}
+          ListEmptyComponent={
+            <EmptyList>
+              <EmptyListTitle>
+                Você não incluiu nenhum igrediente ainda
+              </EmptyListTitle>
+            </EmptyList>
+          }
           renderItem={({ item }) => (
             <ListItem>
-              <ListItemIcon source={item.image} />
+              <ListItemIcon source={{ uri: item.image }} />
               <ListItemText>{item.name}</ListItemText>
-              <RectButton>
+              <TouchableOpacity onPress={() => handleRemove(item)}>
                 <MinusCircle color={theme.orange} size={32} />
-              </RectButton>
+              </TouchableOpacity>
             </ListItem>
           )}
         />

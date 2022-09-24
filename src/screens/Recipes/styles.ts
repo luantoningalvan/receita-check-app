@@ -60,3 +60,15 @@ export const RecipesList = styled(
 ).attrs({
   showsVerticalScrollIndicator: false,
 })``;
+
+export const Loading = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+`;
+
+export const LoadingText = styled.Text`
+  text-align: center;
+  font-size: ${RFValue(14)}px;
+  margin-top: 16px;
+`;
