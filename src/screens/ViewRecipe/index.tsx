@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, StatusBar } from "react-native";
+import { Text, StatusBar, View } from "react-native";
 import {
   Container,
   HeaderBanner,
@@ -13,12 +13,20 @@ import {
   FloatingCounter,
 } from "./styles";
 import { Recipe } from "../../common/interfaces/Recipe";
-import { Check, Clock, UsersThree } from "phosphor-react-native";
+import {
+  Check,
+  Clock,
+  UsersThree,
+  CaretLeft,
+  BookmarkSimple,
+} from "phosphor-react-native";
 import { Tabs } from "../../components/Tabs";
 import { Checkbox } from "../../components/Checkbox";
 import { useState } from "react";
 import CircularProgress from "react-native-circular-progress-indicator";
 import { theme } from "../../styles/theme";
+import { IconButton } from "../../components/IconButton";
+import { SaveRecipeButton } from "../../components/SaveRecipeButton";
 
 export function ViewRecipe(props: any) {
   const recipe: Recipe = props.route.params.recipe;
@@ -58,6 +66,18 @@ export function ViewRecipe(props: any) {
           uri: recipe.imageUrl,
         }}
       >
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            zIndex: 1,
+            marginTop: 40,
+            marginHorizontal: 20,
+          }}
+        >
+          <IconButton onPress={props.navigation.goBack} icon={CaretLeft} />
+          <SaveRecipeButton recipe={recipe} />
+        </View>
         <Gradient colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]} />
       </HeaderBanner>
       <Paper>

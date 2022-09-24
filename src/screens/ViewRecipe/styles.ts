@@ -2,6 +2,7 @@ import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { RFValue } from "react-native-responsive-fontsize";
 import { FlatList, FlatListProps } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 
 export const Container = styled.View`
   flex: 1;
@@ -16,6 +17,7 @@ export const HeaderBanner = styled.ImageBackground`
 export const Gradient = styled(LinearGradient)`
   width: 100%;
   height: 250px;
+  position: absolute;
 `;
 
 export const Paper = styled.View`

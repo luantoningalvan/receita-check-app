@@ -11,7 +11,7 @@ export function Saved() {
 
   useFocusEffect(
     React.useCallback(() => {
-      AsyncStorage.getItem("saved").then((data) => {
+      AsyncStorage.getItem("savedRecipes").then((data) => {
         if (data) {
           setRecipes(JSON.parse(data));
         }
