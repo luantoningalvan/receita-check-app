@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "receitacheck",
+    "name": "ReceitaCheck",
     "slug": "receitacheck",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.brightmoon.receitacheck"
     },
     "android": {
       "package": "com.brightmoon.receitacheck",
@@ -28,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c098d061-3b39-4d83-82ec-302b264ebffa"
+      }
     }
   }
 }

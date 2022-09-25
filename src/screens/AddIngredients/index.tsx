@@ -29,7 +29,9 @@ export function AddIngredients(props: AddIngredientsProps) {
   const [ingredients, setIngredients] = React.useState<Ingredient[]>([]);
 
   async function fetchIngredients() {
-    const result = await axios.get("http://192.168.0.103:3000/ingredients");
+    const result = await axios.get(
+      "https://web-lsr5.vercel.app/api/ingredients"
+    );
     setIngredients(result.data);
   }
 

@@ -43,9 +43,12 @@ export function Recipes() {
           const formatToParam = decodeIngredients
             .map((item) => item.id)
             .join(",");
-          const result = await axios.get("http://192.168.0.103:3000/recipes", {
-            params: { i: formatToParam },
-          });
+          const result = await axios.get(
+            "https://web-lsr5.vercel.app/api/recipes",
+            {
+              params: { i: formatToParam },
+            }
+          );
           setRecipes(result.data);
         } else {
           setRecipes([]);
