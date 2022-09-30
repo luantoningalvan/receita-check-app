@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import { FlatList, FlatListProps } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { Ingredient } from "../../assets/ingredients";
+import { Ingredient } from "../../common/interfaces/Ingredient";
 
 export const Backdrop = styled.View`
   background: rgba(0, 0, 0, 0.5);
@@ -18,7 +18,6 @@ export const AddIngredientsContainer = styled.View`
   border-top-right-radius: 16px;
   height: 80%;
   top: 20%;
-  elevation: 2;
 `;
 
 export const SearchArea = styled.View`

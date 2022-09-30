@@ -1,6 +1,6 @@
 import React from "react";
 import { MagnifyingGlass, PlusCircle } from "phosphor-react-native";
-import { Modal } from "react-native";
+import { Modal, TouchableWithoutFeedback } from "react-native";
 import { theme } from "../../styles/theme";
 import {
   AddIngredientsContainer,
@@ -63,7 +63,10 @@ export function AddIngredients(props: AddIngredientsProps) {
 
   return (
     <Modal transparent statusBarTranslucent animationType="fade" {...props}>
-      <Backdrop />
+      <TouchableWithoutFeedback onPress={props.onRequestClose}>
+        <Backdrop />
+      </TouchableWithoutFeedback>
+
       <AddIngredientsContainer>
         <SearchArea>
           <MagnifyingGlass color="#878787" />
