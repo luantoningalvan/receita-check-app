@@ -8,6 +8,7 @@ import { TabIcon } from "../components/TabBarIcon";
 import { Saved } from "../screens/Saved";
 import { Ingredients } from "../screens/Ingredients";
 import { ViewRecipe } from "../screens/ViewRecipe";
+import { Platform } from "react-native";
 
 const BottomTabNavigator = createBottomTabNavigator();
 
@@ -21,7 +22,7 @@ function RootRoutes() {
         tabBarShowLabel: false,
         tabBarActiveTintColor: theme.orange,
         tabBarStyle: {
-          height: 64,
+          height: Platform.OS === "ios" ? 80 : 64,
           backgroundColor: theme.orangeLight,
           elevation: 0,
           borderTopWidth: 0,
