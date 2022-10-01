@@ -15,6 +15,7 @@ export const Grettings = styled.Text`
   font-size: ${RFValue(20)}px;
   margin-top: 24px;
   font-weight: 500;
+  max-width: 300px;
 `;
 
 export const SearchArea = styled.View`

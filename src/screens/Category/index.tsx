@@ -1,31 +1,34 @@
 import React from "react";
 import {
   Container,
-  Grettings,
-  SearchArea,
-  SearchInput,
-  VoiceSeachButton,
-  CategoriesList,
-  CategoryListItem,
-  CategoryListItemText,
   RecipesList,
   Loading,
   LoadingText,
+  BackButton,
+  CategoryTitle,
+  Header,
 } from "./styles";
-import { MagnifyingGlass, Microphone } from "phosphor-react-native";
-import { ActivityIndicator, Alert, Text, View } from "react-native";
+import { ActivityIndicator, Alert } from "react-native";
 import { RecipeCard } from "../../components/RecipeCard";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ingredient } from "../../common/interfaces/Ingredient";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { theme } from "../../styles/theme";
+import { CaretLeft } from "phosphor-react-native";
 
-export function Recipes() {
+export function Category() {
   const [recipes, setRecipes] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [emptyList, setEmptyList] = React.useState(false);
+
+  const route = useRoute();
   const navigation = useNavigation();
+  const params = route.params as { category: string };
 
   async function fetchRecipes() {
     setIsLoading(true);
@@ -71,56 +74,28 @@ export function Recipes() {
 
   return (
     <Container>
+      <Header>
+        <BackButton onPress={navigation.goBack}>
+          <CaretLeft />
+        </BackButton>
+        <CategoryTitle>{params.category}</CategoryTitle>
+      </Header>
+
+      {isLoading && (
+        <Loading>
+          <ActivityIndicator size={48} color={theme.orange} />
+          <LoadingText>
+            Buscando receitas com{"\n"}os seus ingredientes
+          </LoadingText>
+        </Loading>
+      )}
       <RecipesList
-        ListHeaderComponent={
-          <>
-            <Grettings>Confira o que você pode cozinhar hoje!</Grettings>
-
-            <SearchArea>
-              <MagnifyingGlass color="#878787" />
-
-              <SearchInput
-                placeholder="Buscar receita"
-                placeholderTextColor="#878787"
-              />
-
-              {/* <VoiceSeachButton>
-                <Microphone color="#6A6A6A" />
-              </VoiceSeachButton> */}
-            </SearchArea>
-
-            <View>
-              <CategoriesList
-                data={["Salgados", "Veganos", "Massas", "Doces"]}
-                keyExtractor={(v: string) => v}
-                renderItem={({ item }) => (
-                  <CategoryListItem
-                    onPress={() =>
-                      navigation.navigate("Category", { category: item })
-                    }
-                  >
-                    <CategoryListItemText>{item}</CategoryListItemText>
-                  </CategoryListItem>
-                )}
-                horizontal
-              />
-            </View>
-
-            {isLoading && (
-              <Loading>
-                <ActivityIndicator size={48} color={theme.orange} />
-                <LoadingText>
-                  Buscando receitas com{"\n"}os seus ingredientes
-                </LoadingText>
-              </Loading>
-            )}
-          </>
-        }
         refreshing={isLoading}
         data={isLoading ? [] : recipes}
         numColumns={2}
         columnWrapperStyle={{ justifyContent: "space-between" }}
         renderItem={({ item }) => <RecipeCard recipe={item} />}
+        contentContainerStyle={{ padding: 20 }}
         ListEmptyComponent={
           <>
             {emptyList && !isLoading && (
