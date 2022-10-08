@@ -1,5 +1,5 @@
 export type Ingredient = {
-  id: number;
-  name: string;
-  image: string;
+  id: string;
+  description: string;
+  image_url: string;
 };

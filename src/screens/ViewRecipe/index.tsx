@@ -69,7 +69,7 @@ export function ViewRecipe(props: any) {
           );
 
           setCanDoIt(
-            recipe.ingredientsRef.every((elem) =>
+            recipe.ingredients_ref.every((elem) =>
               parseIngredients.includes(elem)
             )
           );
@@ -89,7 +89,7 @@ export function ViewRecipe(props: any) {
       />
       <HeaderBanner
         source={{
-          uri: recipe.imageUrl,
+          uri: recipe.image_url,
         }}
       >
         <View
@@ -112,14 +112,16 @@ export function ViewRecipe(props: any) {
         <RecipeInfos>
           <Info>
             <Clock size={24} />
-            <Text style={{ marginLeft: 8 }}>{`${recipe.time} min`}</Text>
+            <Text
+              style={{ marginLeft: 8 }}
+            >{`${recipe.preparation_time} min`}</Text>
           </Info>
 
           <Info style={{ flex: 1 }}>
             <UsersThree size={24} />
             <Text
               style={{ marginLeft: 8 }}
-            >{`${recipe.portions} porções`}</Text>
+            >{`${recipe.how_many_people} porções`}</Text>
           </Info>
 
           <RecipeCheck state={candDoIt}>
@@ -175,7 +177,7 @@ export function ViewRecipe(props: any) {
         {activeTab === "steps" && (
           <>
             <IngredientsList
-              data={recipe.steps}
+              data={recipe.preparation_mode}
               renderItem={({ item, index }) => (
                 <Checkbox
                   label={`${index + 1}. ${item}`}
@@ -187,7 +189,7 @@ export function ViewRecipe(props: any) {
             />
             <FloatingCounter>
               <CircularProgress
-                maxValue={recipe.steps.length}
+                maxValue={recipe.preparation_mode.length}
                 value={stepsDone.length}
                 radius={35}
                 activeStrokeColor={theme.orange}
@@ -197,7 +199,7 @@ export function ViewRecipe(props: any) {
                 progressFormatter={() => {
                   "worklet";
 
-                  return `${stepsDone.length}/${recipe.steps.length}`;
+                  return `${stepsDone.length}/${recipe.preparation_mode.length}`;
                 }}
               />
             </FloatingCounter>

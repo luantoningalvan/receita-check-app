@@ -25,14 +25,11 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
     <Container onPress={() => navigation.navigate("ViewRecipe", { recipe })}>
       <CoverContainer>
         <BlurCover style={{ opacity: fadeAnim }}>
-          <Blurhash
-            blurhash="LGFFaXYk^6#M@-5c,1J5@[or[Q6."
-            style={{ flex: 1 }}
-          />
+          <Blurhash blurhash={recipe.hash} style={{ flex: 1 }} />
         </BlurCover>
         <Cover
           source={{
-            uri: recipe.imageUrl,
+            uri: recipe.image_url,
           }}
           onLoad={onLoad}
         />

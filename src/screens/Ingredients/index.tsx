@@ -73,8 +73,8 @@ export function Ingredients() {
           }
           renderItem={({ item }) => (
             <ListItem>
-              <ListItemIcon source={{ uri: item.image }} />
-              <ListItemText>{item.name}</ListItemText>
+              <ListItemIcon source={{ uri: item.image_url }} />
+              <ListItemText>{item.description}</ListItemText>
               <TouchableOpacity onPress={() => handleRemove(item)}>
                 <MinusCircle color={theme.orange} size={32} />
               </TouchableOpacity>

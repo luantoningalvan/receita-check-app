@@ -1,7 +1,7 @@
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Recipe } from "../common/interfaces/Recipe";
-import { ToastAndroid } from "react-native";
+import Toast from "react-native-toast-message";
 
 interface SavedRecipesContextProps {
   savedRecipes: number[];
@@ -27,7 +27,11 @@ export const SavedRecipesContextProvider = ({
   const handleSaveRecipe = React.useCallback(
     async (recipe: Recipe) => {
       setSavedRecipes((state) => [...state, recipe]);
-      ToastAndroid.show("A receita foi salva", ToastAndroid.SHORT);
+      Toast.show({
+        type: "success",
+        text1: "A receita foi salva",
+        position: "bottom",
+      });
 
       await AsyncStorage.setItem(
         "savedRecipes",
@@ -44,11 +48,11 @@ export const SavedRecipesContextProvider = ({
       );
       setSavedRecipes((state) => newState);
       await AsyncStorage.setItem("savedRecipes", JSON.stringify(newState));
-
-      ToastAndroid.show(
-        "A receita foi removida das salvas",
-        ToastAndroid.SHORT
-      );
+      Toast.show({
+        type: "success",
+        text1: "A receita foi removida das salvas",
+        position: "bottom",
+      });
     },
     [savedRecipes]
   );

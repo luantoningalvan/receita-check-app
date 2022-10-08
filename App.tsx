@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components/native";
 import { SavedRecipesContextProvider } from "./src/contexts/SavedRecipesContext";
 import { AppRoutes } from "./src/routes/AppRoute";
 import { theme } from "./src/styles/theme";
+import Toast from "react-native-toast-message";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <AppRoutes />
         </SavedRecipesContextProvider>
       </GestureHandlerRootView>
+      <Toast />
     </ThemeProvider>
   );
 }

@@ -14,8 +14,8 @@ import {
   AddIngredientButton,
 } from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import { Ingredient } from "../../common/interfaces/Ingredient";
+import { api } from "../../services/api";
 
 interface AddIngredientsProps {
   visible: boolean;
@@ -29,9 +29,7 @@ export function AddIngredients(props: AddIngredientsProps) {
   const [ingredients, setIngredients] = React.useState<Ingredient[]>([]);
 
   async function fetchIngredients() {
-    const result = await axios.get(
-      "https://web-lsr5.vercel.app/api/ingredients"
-    );
+    const result = await api.get("ingredients");
     setIngredients(result.data);
   }
 
@@ -83,8 +81,8 @@ export function AddIngredients(props: AddIngredientsProps) {
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
             <ListItem>
-              <ListItemIcon source={{ uri: item.image }} />
-              <ListItemText>{item.name}</ListItemText>
+              <ListItemIcon source={{ uri: item.image_url }} />
+              <ListItemText>{item.description}</ListItemText>
               <AddIngredientButton onPress={() => handleAdd(item)}>
                 <PlusCircle color={theme.orange} size={32} />
               </AddIngredientButton>

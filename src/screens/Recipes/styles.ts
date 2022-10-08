@@ -70,6 +70,8 @@ export const Loading = styled.View`
 
 export const LoadingText = styled.Text`
   text-align: center;
+  padding: 32px;
+  line-height: 24px;
   font-size: ${RFValue(14)}px;
   margin-top: 16px;
 `;

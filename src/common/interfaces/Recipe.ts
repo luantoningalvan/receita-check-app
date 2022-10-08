@@ -1,10 +1,12 @@
 export interface Recipe {
   id: number;
-  imageUrl: string;
+  image_url: string;
   title: string;
-  time: number;
-  portions: number;
+  preparation_time: number;
+  how_many_people: number;
+  category: string;
+  hash: string;
   ingredients: string[];
-  ingredientsRef: number[];
-  steps: string[];
+  ingredients_ref: number[];
+  preparation_mode: string[];
 }

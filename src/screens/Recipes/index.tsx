@@ -20,11 +20,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ingredient } from "../../common/interfaces/Ingredient";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { theme } from "../../styles/theme";
+import { api } from "../../services/api";
 
 export function Recipes() {
   const [recipes, setRecipes] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [emptyList, setEmptyList] = React.useState(false);
+  const [emptyIngredientsList, setEmptyIngredientsList] = React.useState(false);
   const navigation = useNavigation();
 
   async function fetchRecipes() {
@@ -41,19 +42,15 @@ export function Recipes() {
         );
 
         if (!!decodeIngredients.length) {
-          const formatToParam = decodeIngredients
-            .map((item) => item.id)
-            .join(",");
-          const result = await axios.get(
-            "https://web-lsr5.vercel.app/api/recipes",
-            {
-              params: { i: formatToParam },
-            }
-          );
+          setEmptyIngredientsList(false);
+          const ingredientsId = decodeIngredients.map((item) => item.id);
+          const result = await api.post("recipes/list", {
+            ingredients: ingredientsId,
+          });
           setRecipes(result.data);
         } else {
+          setEmptyIngredientsList(true);
           setRecipes([]);
-          setEmptyList(true);
         }
       }
     } catch (error) {
@@ -91,7 +88,7 @@ export function Recipes() {
 
             <View>
               <CategoriesList
-                data={["Salgados", "Veganos", "Massas", "Doces"]}
+                data={["Salgados", "Veganos", "Massas", "Doces", "Saladas"]}
                 keyExtractor={(v: string) => v}
                 renderItem={({ item }) => (
                   <CategoryListItem
@@ -122,14 +119,21 @@ export function Recipes() {
         columnWrapperStyle={{ justifyContent: "space-between" }}
         renderItem={({ item }) => <RecipeCard recipe={item} />}
         ListEmptyComponent={
-          <>
-            {emptyList && !isLoading && (
-              <LoadingText>
-                Preencha a lista de ingredientes para que possamos encontrar
-                receitas para você.
-              </LoadingText>
-            )}
-          </>
+          !isLoading ? (
+            <>
+              {emptyIngredientsList ? (
+                <LoadingText>
+                  Preencha a lista de ingredientes para que possamos encontrar
+                  receitas para você.
+                </LoadingText>
+              ) : (
+                <LoadingText>
+                  Não encontramos nenuma receita que somente use os seus
+                  ingredientes 😔
+                </LoadingText>
+              )}
+            </>
+          ) : undefined
         }
       />
     </Container>

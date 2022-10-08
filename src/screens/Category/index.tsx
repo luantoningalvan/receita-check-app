@@ -20,6 +20,7 @@ import {
 } from "@react-navigation/native";
 import { theme } from "../../styles/theme";
 import { CaretLeft } from "phosphor-react-native";
+import { api } from "../../services/api";
 
 export function Category() {
   const [recipes, setRecipes] = React.useState([]);
@@ -44,13 +45,16 @@ export function Category() {
         );
 
         if (!!decodeIngredients.length) {
-          const formatToParam = decodeIngredients
-            .map((item) => item.id)
-            .join(",");
-          const result = await axios.get(
-            "https://web-lsr5.vercel.app/api/recipes",
+          const ingredientsId = decodeIngredients.map((item) => item.id);
+          const result = await api.post(
+            "recipes/list",
             {
-              params: { i: formatToParam },
+              ingredients: ingredientsId,
+            },
+            {
+              params: {
+                category: params.category,
+              },
             }
           );
           setRecipes(result.data);
