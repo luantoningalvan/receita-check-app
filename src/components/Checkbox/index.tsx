@@ -14,10 +14,7 @@ export function Checkbox({ label, onChange, checked }: CheckboxProps) {
   }
 
   return (
-    <ItemContainer
-      onPress={handleChange}
-      style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-    >
+    <ItemContainer onPress={handleChange}>
       <CheckboxContainer active={checked} onPress={handleChange}>
         {checked && <Check size={24} color="#fff" />}
       </CheckboxContainer>

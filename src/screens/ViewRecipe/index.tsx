@@ -11,15 +11,13 @@ import {
   RecipeCheck,
   IngredientsList,
   FloatingCounter,
+  SectionTitle,
 } from "./styles";
 import { Recipe } from "../../common/interfaces/Recipe";
 import {
-  Check,
   Clock,
   UsersThree,
   CaretLeft,
-  BookmarkSimple,
-  X,
   ThumbsUp,
   ThumbsDown,
 } from "phosphor-react-native";
@@ -33,8 +31,12 @@ import { SaveRecipeButton } from "../../components/SaveRecipeButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ingredient } from "../../common/interfaces/Ingredient";
 
+type RecipeWithTotals = Recipe & {
+  totalIngredients: number;
+  totalSteps: number;
+};
+
 export function ViewRecipe(props: any) {
-  const recipe: Recipe = props.route.params.recipe;
   const [ingredientsDone, setIngredientsDone] = useState<string[]>([]);
   const [stepsDone, setStepsDone] = useState<string[]>([]);
   const [activeTab, setActiveTab] = React.useState("ingredients");
@@ -60,24 +62,52 @@ export function ViewRecipe(props: any) {
     });
   }
 
-  React.useEffect(() => {
-    const fetchIngredients = AsyncStorage.getItem("ingredients").then(
-      (result) => {
-        if (result) {
-          const parseIngredients = JSON.parse(result).map(
-            (item: Ingredient) => item.id
-          );
+  const recipe: RecipeWithTotals = React.useMemo(() => {
+    const routeRecipe: Recipe = props.route.params.recipe;
 
-          setCanDoIt(
-            recipe.ingredients_ref.every((elem) =>
-              parseIngredients.includes(elem)
-            )
-          );
-        } else {
-          setCanDoIt(false);
-        }
+    const totalIngredients = routeRecipe.ingredients.filter(
+      (ingredient) => !ingredient.startsWith("#")
+    ).length;
+    const totalSteps = routeRecipe.preparation_mode.filter(
+      (step) => !step.startsWith("#")
+    ).length;
+
+    let steps: string[] = [];
+    let currentStep = 1;
+
+    routeRecipe.preparation_mode.forEach((value) => {
+      if (value.startsWith("#")) {
+        steps.push(value);
+      } else {
+        steps.push(`${currentStep}. ${value}`);
+        currentStep += 1;
       }
-    );
+    });
+
+    return {
+      ...routeRecipe,
+      preparation_mode: steps,
+      totalIngredients,
+      totalSteps,
+    };
+  }, [props.route.params.recipe]);
+
+  React.useEffect(() => {
+    AsyncStorage.getItem("ingredients").then((result) => {
+      if (result) {
+        const parseIngredients = JSON.parse(result).map(
+          (item: Ingredient) => item.id
+        );
+
+        setCanDoIt(
+          recipe.ingredients_ref.every((elem) =>
+            parseIngredients.includes(elem)
+          )
+        );
+      } else {
+        setCanDoIt(false);
+      }
+    });
   }, []);
 
   return (
@@ -147,27 +177,34 @@ export function ViewRecipe(props: any) {
             <IngredientsList
               data={recipe.ingredients}
               renderItem={({ item }) => (
-                <Checkbox
-                  label={item}
-                  key={item}
-                  checked={ingredientsDone.includes(item)}
-                  onChange={() => handleIngredientDone(item)}
-                />
+                <>
+                  {item.startsWith("#") ? (
+                    <SectionTitle>{item.replace("#", "")}</SectionTitle>
+                  ) : (
+                    <Checkbox
+                      label={item}
+                      key={item}
+                      checked={ingredientsDone.includes(item)}
+                      onChange={() => handleIngredientDone(item)}
+                    />
+                  )}
+                </>
               )}
             />
             <FloatingCounter>
               <CircularProgress
-                maxValue={recipe.ingredients.length}
+                maxValue={recipe.totalIngredients}
                 value={ingredientsDone.length}
                 radius={35}
                 activeStrokeColor={theme.orange}
                 inActiveStrokeColor={theme.orangeLight}
                 rotation={180}
                 duration={150}
+                circleBackgroundColor="rgba(255,255,255,0.9)"
                 progressFormatter={() => {
                   "worklet";
 
-                  return `${ingredientsDone.length}/${recipe.ingredients.length}`;
+                  return `${ingredientsDone.length}/${recipe.totalIngredients}`;
                 }}
               />
             </FloatingCounter>
@@ -179,27 +216,34 @@ export function ViewRecipe(props: any) {
             <IngredientsList
               data={recipe.preparation_mode}
               renderItem={({ item, index }) => (
-                <Checkbox
-                  label={`${index + 1}. ${item}`}
-                  key={item}
-                  checked={stepsDone.includes(item)}
-                  onChange={() => handleStepDone(item)}
-                />
+                <>
+                  {item.startsWith("#") ? (
+                    <SectionTitle>{item.replace("#", "")}</SectionTitle>
+                  ) : (
+                    <Checkbox
+                      label={item}
+                      key={item}
+                      checked={stepsDone.includes(item)}
+                      onChange={() => handleStepDone(item)}
+                    />
+                  )}
+                </>
               )}
             />
             <FloatingCounter>
               <CircularProgress
-                maxValue={recipe.preparation_mode.length}
+                maxValue={recipe.totalSteps}
                 value={stepsDone.length}
                 radius={35}
                 activeStrokeColor={theme.orange}
                 inActiveStrokeColor={theme.orangeLight}
                 rotation={180}
                 duration={150}
+                circleBackgroundColor="rgba(255,255,255,0.9)"
                 progressFormatter={() => {
                   "worklet";
 
-                  return `${stepsDone.length}/${recipe.preparation_mode.length}`;
+                  return `${stepsDone.length}/${recipe.totalSteps}`;
                 }}
               />
             </FloatingCounter>

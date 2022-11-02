@@ -4,7 +4,6 @@ import {
   Grettings,
   SearchArea,
   SearchInput,
-  VoiceSeachButton,
   CategoriesList,
   CategoryListItem,
   CategoryListItemText,
@@ -12,15 +11,14 @@ import {
   Loading,
   LoadingText,
 } from "./styles";
-import { MagnifyingGlass, Microphone } from "phosphor-react-native";
-import { ActivityIndicator, Alert, Text, View } from "react-native";
+import { MagnifyingGlass } from "phosphor-react-native";
+import { ActivityIndicator, Alert, View } from "react-native";
 import { RecipeCard } from "../../components/RecipeCard";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ingredient } from "../../common/interfaces/Ingredient";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { theme } from "../../styles/theme";
 import { api } from "../../services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function Recipes() {
   const [recipes, setRecipes] = React.useState([]);
@@ -128,7 +126,7 @@ export function Recipes() {
                 </LoadingText>
               ) : (
                 <LoadingText>
-                  Não encontramos nenuma receita que somente use os seus
+                  Não encontramos nenhuma receita que somente use os seus
                   ingredientes 😔
                 </LoadingText>
               )}

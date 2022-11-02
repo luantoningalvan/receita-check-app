@@ -19,7 +19,7 @@ export const CheckboxContainer = styled.TouchableOpacity<{ active: boolean }>`
 `;
 
 export const ItemContainer = styled.TouchableOpacity`
-  padding: 16px 0px;
+  padding: 12px 0px;
   flex-direction: row;
   align-items: center;
 `;
@@ -27,4 +27,5 @@ export const ItemContainer = styled.TouchableOpacity`
 export const ItemText = styled.Text`
   margin-left: 12px;
   font-size: ${RFValue(15)}px;
+  flex: 1;
 `;

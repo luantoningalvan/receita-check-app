@@ -2,7 +2,6 @@ import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { RFValue } from "react-native-responsive-fontsize";
 import { FlatList, FlatListProps } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
 
 export const Container = styled.View`
   flex: 1;
@@ -27,6 +26,7 @@ export const Paper = styled.View`
   border-top-right-radius: 16px;
   margin-top: -16px;
   padding: ${RFValue(20)}px;
+  width: 100%;
 `;
 
 export const Title = styled.Text`
@@ -61,6 +61,7 @@ export const IngredientsList = styled(
   showsVerticalScrollIndicator: false,
 })`
   margin-top: 12px;
+  width: 100%;
 `;
 
 export const FloatingCounter = styled.View`
@@ -68,4 +69,11 @@ export const FloatingCounter = styled.View`
   bottom: 20px;
   right: 20px;
   z-index: 4;
+`;
+
+export const SectionTitle = styled.Text`
+  font-weight: bold;
+  font-size: ${RFValue(16)}px;
+  margin-top: 24px;
+  margin-bottom: 8px;
 `;
