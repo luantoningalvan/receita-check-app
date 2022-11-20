@@ -1,5 +1,5 @@
 import React from "react";
-import { MinusCircle, Plus } from "phosphor-react-native";
+import { Plus } from "phosphor-react-native";
 import {
   Container,
   Header,
@@ -8,17 +8,12 @@ import {
   Button,
   Paper,
   IngredientsList,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
   EmptyList,
   EmptyListTitle,
 } from "./styles";
 import { AddIngredients } from "../AddIngredients";
-import { theme } from "../../styles/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native";
 import { Ingredient } from "../../common/interfaces/Ingredient";
 import { IngredientCard } from "../../components/IngredientCard";
 

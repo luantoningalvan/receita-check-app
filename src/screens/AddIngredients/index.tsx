@@ -1,5 +1,5 @@
 import React from "react";
-import { MagnifyingGlass, PlusCircle } from "phosphor-react-native";
+import { MagnifyingGlass } from "phosphor-react-native";
 import { Modal, TouchableWithoutFeedback } from "react-native";
 import { theme } from "../../styles/theme";
 import {
@@ -8,10 +8,6 @@ import {
   SearchArea,
   SearchInput,
   IngredientsList,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  AddIngredientButton,
 } from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ingredient } from "../../common/interfaces/Ingredient";
@@ -28,28 +24,12 @@ export function AddIngredients(props: AddIngredientsProps) {
     Ingredient[]
   >([]);
   const [ingredients, setIngredients] = React.useState<Ingredient[]>([]);
+  const [search, setSearch] = React.useState("");
 
-  async function fetchIngredients() {
+  const fetchIngredients = React.useCallback(async () => {
     const result = await api.get("ingredients");
     setIngredients(result.data);
-  }
-
-  React.useEffect(() => {
-    fetchIngredients();
   }, []);
-
-  React.useEffect(() => {
-    AsyncStorage.getItem("ingredients").then((data) => {
-      if (data) {
-        setCurrentIngredients(JSON.parse(data));
-      }
-    });
-  }, [props.visible]);
-
-  const ingredientsWithoutAlreadyIncluded = React.useMemo(() => {
-    const ingredientsIds = currentIngredients.map(({ id }) => id);
-    return ingredients.filter((item) => !ingredientsIds.includes(item.id));
-  }, [currentIngredients, ingredients]);
 
   const handleAdd = React.useCallback(async (item: Ingredient) => {
     let newList;
@@ -69,6 +49,38 @@ export function AddIngredients(props: AddIngredientsProps) {
     []
   );
 
+  const ingredientsWithoutAlreadyIncluded = React.useMemo(() => {
+    const ingredientsIds = currentIngredients.map(({ id }) => id);
+    return ingredients.filter((item) => {
+      if (ingredientsIds.includes(item.id)) {
+        return false;
+      }
+
+      if (
+        search &&
+        !item.description
+          .toLocaleLowerCase()
+          .includes(search.toLocaleLowerCase())
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [currentIngredients, ingredients, search]);
+
+  React.useEffect(() => {
+    fetchIngredients();
+  }, []);
+
+  React.useEffect(() => {
+    AsyncStorage.getItem("ingredients").then((data) => {
+      if (data) {
+        setCurrentIngredients(JSON.parse(data));
+      }
+    });
+  }, [props.visible]);
+
   return (
     <Modal transparent statusBarTranslucent animationType="fade" {...props}>
       <TouchableWithoutFeedback onPress={props.onRequestClose}>
@@ -83,6 +95,8 @@ export function AddIngredients(props: AddIngredientsProps) {
             placeholder="Buscar ingrediente"
             placeholderTextColor="#878787"
             selectionColor={theme.orange}
+            value={search}
+            onChangeText={setSearch}
           />
         </SearchArea>
 
@@ -90,6 +104,7 @@ export function AddIngredients(props: AddIngredientsProps) {
           data={ingredientsWithoutAlreadyIncluded}
           keyExtractor={(item) => String(item.id)}
           renderItem={renderItem}
+          keyboardShouldPersistTaps="handled"
         />
       </AddIngredientsContainer>
     </Modal>
