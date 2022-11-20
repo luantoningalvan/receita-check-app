@@ -12,6 +12,7 @@ import {
   IngredientsList,
   FloatingCounter,
   SectionTitle,
+  HeaderTop,
 } from "./styles";
 import { Recipe } from "../../common/interfaces/Recipe";
 import {
@@ -24,12 +25,13 @@ import {
 import { Tabs } from "../../components/Tabs";
 import { Checkbox } from "../../components/Checkbox";
 import { useState } from "react";
-import CircularProgress from "react-native-circular-progress-indicator";
 import { theme } from "../../styles/theme";
 import { IconButton } from "../../components/IconButton";
 import { SaveRecipeButton } from "../../components/SaveRecipeButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ingredient } from "../../common/interfaces/Ingredient";
+import CircularProgress from "react-native-circular-progress-indicator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 type RecipeWithTotals = Recipe & {
   totalIngredients: number;
@@ -41,6 +43,7 @@ export function ViewRecipe(props: any) {
   const [stepsDone, setStepsDone] = useState<string[]>([]);
   const [activeTab, setActiveTab] = React.useState("ingredients");
   const [candDoIt, setCanDoIt] = React.useState(false);
+  const bottomSheetRef = React.useRef<BottomSheet>(null);
 
   function handleIngredientDone(ingredient: string) {
     setIngredientsDone((state) => {
@@ -61,6 +64,8 @@ export function ViewRecipe(props: any) {
       }
     });
   }
+
+  const snapPoints = React.useMemo(() => ["75%", "100%"], []);
 
   const recipe: RecipeWithTotals = React.useMemo(() => {
     const routeRecipe: Recipe = props.route.params.recipe;
@@ -122,61 +127,98 @@ export function ViewRecipe(props: any) {
           uri: recipe.image_url,
         }}
       >
-        <View
-          style={{
-            justifyContent: "space-between",
-            flexDirection: "row",
-            zIndex: 1,
-            marginTop: 40,
-            marginHorizontal: 20,
-          }}
-        >
-          <IconButton onPress={props.navigation.goBack} icon={CaretLeft} />
-          <SaveRecipeButton recipe={recipe} />
-        </View>
-        <Gradient colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]} />
+        <Gradient colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}>
+          <HeaderTop>
+            <IconButton onPress={props.navigation.goBack} icon={CaretLeft} />
+            <SaveRecipeButton recipe={recipe} />
+          </HeaderTop>
+        </Gradient>
       </HeaderBanner>
-      <Paper>
-        <Title>{recipe.title}</Title>
 
-        <RecipeInfos>
-          <Info>
-            <Clock size={24} />
-            <Text
-              style={{ marginLeft: 8 }}
-            >{`${recipe.preparation_time} min`}</Text>
-          </Info>
+      {activeTab == "ingredients" ? (
+        <FloatingCounter>
+          <CircularProgress
+            maxValue={recipe.totalIngredients}
+            value={ingredientsDone.length}
+            radius={35}
+            activeStrokeColor={theme.orange}
+            inActiveStrokeColor={theme.orangeLight}
+            rotation={180}
+            duration={150}
+            circleBackgroundColor="rgba(255,255,255,0.9)"
+            progressFormatter={() => {
+              "worklet";
 
-          <Info style={{ flex: 1 }}>
-            <UsersThree size={24} />
-            <Text
-              style={{ marginLeft: 8 }}
-            >{`${recipe.how_many_people} porções`}</Text>
-          </Info>
+              return `${ingredientsDone.length}/${recipe.totalIngredients}`;
+            }}
+          />
+        </FloatingCounter>
+      ) : (
+        <FloatingCounter>
+          <CircularProgress
+            maxValue={recipe.totalSteps}
+            value={stepsDone.length}
+            radius={35}
+            activeStrokeColor={theme.orange}
+            inActiveStrokeColor={theme.orangeLight}
+            rotation={180}
+            duration={150}
+            circleBackgroundColor="rgba(255,255,255,0.9)"
+            progressFormatter={() => {
+              "worklet";
 
-          <RecipeCheck state={candDoIt}>
-            {candDoIt ? (
-              <ThumbsUp color="#fff" size={22} />
-            ) : (
-              <ThumbsDown color="#fff" size={22} />
-            )}
-          </RecipeCheck>
-        </RecipeInfos>
+              return `${stepsDone.length}/${recipe.totalSteps}`;
+            }}
+          />
+        </FloatingCounter>
+      )}
 
-        <Tabs
-          activeTab={activeTab}
-          onChange={(tab) => setActiveTab(tab)}
-          tabs={[
-            { label: "Ingredientes", value: "ingredients" },
-            { label: "Modo de preparo", value: "steps" },
-          ]}
-        />
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={0}
+        snapPoints={snapPoints}
+        style={{ zIndex: 4 }}
+      >
+        <Paper>
+          <Title>{recipe.title}</Title>
 
-        {activeTab === "ingredients" && (
-          <>
+          <RecipeInfos>
+            <Info>
+              <Clock size={24} />
+              <Text
+                style={{ marginLeft: 8 }}
+              >{`${recipe.preparation_time} min`}</Text>
+            </Info>
+
+            <Info style={{ flex: 1 }}>
+              <UsersThree size={24} />
+              <Text
+                style={{ marginLeft: 8 }}
+              >{`${recipe.how_many_people} porções`}</Text>
+            </Info>
+
+            <RecipeCheck state={candDoIt}>
+              {candDoIt ? (
+                <ThumbsUp color="#fff" size={22} />
+              ) : (
+                <ThumbsDown color="#fff" size={22} />
+              )}
+            </RecipeCheck>
+          </RecipeInfos>
+
+          <Tabs
+            activeTab={activeTab}
+            onChange={(tab) => setActiveTab(tab)}
+            tabs={[
+              { label: "Ingredientes", value: "ingredients" },
+              { label: "Modo de preparo", value: "steps" },
+            ]}
+          />
+
+          {activeTab === "ingredients" && (
             <IngredientsList
               data={recipe.ingredients}
-              renderItem={({ item }) => (
+              renderItem={({ item }: any) => (
                 <>
                   {item.startsWith("#") ? (
                     <SectionTitle>{item.replace("#", "")}</SectionTitle>
@@ -191,31 +233,12 @@ export function ViewRecipe(props: any) {
                 </>
               )}
             />
-            <FloatingCounter>
-              <CircularProgress
-                maxValue={recipe.totalIngredients}
-                value={ingredientsDone.length}
-                radius={35}
-                activeStrokeColor={theme.orange}
-                inActiveStrokeColor={theme.orangeLight}
-                rotation={180}
-                duration={150}
-                circleBackgroundColor="rgba(255,255,255,0.9)"
-                progressFormatter={() => {
-                  "worklet";
+          )}
 
-                  return `${ingredientsDone.length}/${recipe.totalIngredients}`;
-                }}
-              />
-            </FloatingCounter>
-          </>
-        )}
-
-        {activeTab === "steps" && (
-          <>
+          {activeTab === "steps" && (
             <IngredientsList
               data={recipe.preparation_mode}
-              renderItem={({ item, index }) => (
+              renderItem={({ item }: any) => (
                 <>
                   {item.startsWith("#") ? (
                     <SectionTitle>{item.replace("#", "")}</SectionTitle>
@@ -230,26 +253,9 @@ export function ViewRecipe(props: any) {
                 </>
               )}
             />
-            <FloatingCounter>
-              <CircularProgress
-                maxValue={recipe.totalSteps}
-                value={stepsDone.length}
-                radius={35}
-                activeStrokeColor={theme.orange}
-                inActiveStrokeColor={theme.orangeLight}
-                rotation={180}
-                duration={150}
-                circleBackgroundColor="rgba(255,255,255,0.9)"
-                progressFormatter={() => {
-                  "worklet";
-
-                  return `${stepsDone.length}/${recipe.totalSteps}`;
-                }}
-              />
-            </FloatingCounter>
-          </>
-        )}
-      </Paper>
+          )}
+        </Paper>
+      </BottomSheet>
     </Container>
   );
 }

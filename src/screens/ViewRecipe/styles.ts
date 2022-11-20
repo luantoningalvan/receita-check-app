@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { RFValue } from "react-native-responsive-fontsize";
-import { FlatList, FlatListProps } from "react-native";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 
 export const Container = styled.View`
   flex: 1;
@@ -13,19 +13,23 @@ export const HeaderBanner = styled.ImageBackground`
   height: 250px;
 `;
 
+export const HeaderTop = styled.View`
+  justify-content: space-between;
+  flex-direction: row;
+  margin: 40px 16px 0px 16px;
+  position: relative;
+`;
+
 export const Gradient = styled(LinearGradient)`
   width: 100%;
   height: 250px;
-  position: absolute;
 `;
 
 export const Paper = styled.View`
   background: #fff;
   flex: 1;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  margin-top: -16px;
-  padding: ${RFValue(20)}px;
+  padding: ${RFValue(16)}px;
+  padding-top: 8px;
   width: 100%;
 `;
 
@@ -55,9 +59,7 @@ export const RecipeCheck = styled.View<{ state: boolean }>`
   justify-content: center;
 `;
 
-export const IngredientsList = styled(
-  FlatList as new (props: FlatListProps<string>) => FlatList<string>
-).attrs({
+export const IngredientsList = styled(BottomSheetFlatList).attrs({
   showsVerticalScrollIndicator: false,
 })`
   margin-top: 12px;
@@ -68,7 +70,7 @@ export const FloatingCounter = styled.View`
   position: absolute;
   bottom: 20px;
   right: 20px;
-  z-index: 4;
+  z-index: 1;
 `;
 
 export const SectionTitle = styled.Text`
