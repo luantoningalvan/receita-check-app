@@ -11,6 +11,7 @@ export declare global {
         category: string;
       };
       Search: undefined;
+      Ingredients: undefined;
     }
   }
 }

@@ -55,10 +55,10 @@ export const EmptyList = styled.View`
   padding: 32px;
   justify-content: center;
   align-items: center;
+  flex: 1;
 `;
 
 export const EmptyListTitle = styled.Text`
   font-size: ${RFValue(14)}px;
-  font-weight: bold;
   text-align: center;
 `;

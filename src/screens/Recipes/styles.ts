@@ -76,3 +76,17 @@ export const LoadingText = styled.Text`
   font-size: ${RFValue(14)}px;
   margin-top: 16px;
 `;
+
+export const EmptyIngredientsList = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 24px;
+`;
+
+export const EmptyIngredientsListMessage = styled.Text`
+  text-align: center;
+  line-height: 24px;
+  font-size: ${RFValue(14)}px;
+  margin: 16px 0 32px 0;
+`;
