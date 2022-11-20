@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import { Ingredient } from "../../common/interfaces/Ingredient";
+import { IngredientCard } from "../../components/IngredientCard";
 
 export function Ingredients() {
   const [showAddIngredients, setShowAddIngredients] = React.useState(false);
@@ -35,15 +36,22 @@ export function Ingredients() {
     }, [showAddIngredients])
   );
 
-  const handleRemove = React.useCallback(
-    async (item: Ingredient) => {
-      const newList = ingredients.filter(
-        (ingredient) => ingredient.id !== item.id
-      );
-      setIngredients(newList);
-      await AsyncStorage.setItem("ingredients", JSON.stringify(newList));
-    },
-    [ingredients]
+  const handleRemove = React.useCallback(async (item: Ingredient) => {
+    let newList;
+
+    setIngredients((state) => {
+      newList = state.filter((ingredient) => ingredient.id !== item.id);
+      return newList;
+    });
+
+    await AsyncStorage.setItem("ingredients", JSON.stringify(newList));
+  }, []);
+
+  const renderItem = React.useCallback(
+    ({ item }: { item: Ingredient }) => (
+      <IngredientCard onPress={handleRemove} item={item} type="remove" />
+    ),
+    []
   );
 
   return (
@@ -71,15 +79,7 @@ export function Ingredients() {
               </EmptyListTitle>
             </EmptyList>
           }
-          renderItem={({ item }) => (
-            <ListItem>
-              <ListItemIcon source={{ uri: item.image_url }} />
-              <ListItemText>{item.description}</ListItemText>
-              <TouchableOpacity onPress={() => handleRemove(item)}>
-                <MinusCircle color={theme.orange} size={32} />
-              </TouchableOpacity>
-            </ListItem>
-          )}
+          renderItem={renderItem}
         />
       </Paper>
     </Container>

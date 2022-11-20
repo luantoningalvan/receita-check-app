@@ -16,6 +16,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ingredient } from "../../common/interfaces/Ingredient";
 import { api } from "../../services/api";
+import { IngredientCard } from "../../components/IngredientCard";
 
 interface AddIngredientsProps {
   visible: boolean;
@@ -50,13 +51,22 @@ export function AddIngredients(props: AddIngredientsProps) {
     return ingredients.filter((item) => !ingredientsIds.includes(item.id));
   }, [currentIngredients, ingredients]);
 
-  const handleAdd = React.useCallback(
-    async (item: Ingredient) => {
-      const newList = [...currentIngredients, item];
-      setCurrentIngredients(newList);
-      await AsyncStorage.setItem("ingredients", JSON.stringify(newList));
-    },
-    [currentIngredients]
+  const handleAdd = React.useCallback(async (item: Ingredient) => {
+    let newList;
+
+    setCurrentIngredients((state) => {
+      newList = [...state, item];
+      return newList;
+    });
+
+    await AsyncStorage.setItem("ingredients", JSON.stringify(newList));
+  }, []);
+
+  const renderItem = React.useCallback(
+    ({ item }: { item: Ingredient }) => (
+      <IngredientCard item={item} onPress={handleAdd} type="add" />
+    ),
+    []
   );
 
   return (
@@ -79,15 +89,7 @@ export function AddIngredients(props: AddIngredientsProps) {
         <IngredientsList
           data={ingredientsWithoutAlreadyIncluded}
           keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => (
-            <ListItem>
-              <ListItemIcon source={{ uri: item.image_url }} />
-              <ListItemText>{item.description}</ListItemText>
-              <AddIngredientButton onPress={() => handleAdd(item)}>
-                <PlusCircle color={theme.orange} size={32} />
-              </AddIngredientButton>
-            </ListItem>
-          )}
+          renderItem={renderItem}
         />
       </AddIngredientsContainer>
     </Modal>
