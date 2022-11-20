@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ingredient } from "../../common/interfaces/Ingredient";
 import { api } from "../../services/api";
 import { IngredientCard } from "../../components/IngredientCard";
+import { EmptyList, EmptyListTitle } from "../Ingredients/styles";
 
 interface AddIngredientsProps {
   visible: boolean;
@@ -105,6 +106,17 @@ export function AddIngredients(props: AddIngredientsProps) {
           keyExtractor={(item) => String(item.id)}
           renderItem={renderItem}
           keyboardShouldPersistTaps="handled"
+          ListEmptyComponent={
+            <EmptyList>
+              {currentIngredients.length > 1 && !search ? (
+                <EmptyListTitle>😮 Uau, você já tem tudo!</EmptyListTitle>
+              ) : (
+                <EmptyListTitle>
+                  😔 Não encontramos nenhum ingrediente
+                </EmptyListTitle>
+              )}
+            </EmptyList>
+          }
         />
       </AddIngredientsContainer>
     </Modal>
