@@ -10,6 +10,7 @@ import { Ingredients } from "../screens/Ingredients";
 import { ViewRecipe } from "../screens/ViewRecipe";
 import { Platform } from "react-native";
 import { Category } from "../screens/Category";
+import { SearchRecipes } from "../screens/SearchRecipes";
 
 const BottomTabNavigator = createBottomTabNavigator();
 
@@ -68,6 +69,7 @@ export function AppRoutes() {
         <RecipesNavigator.Screen name="Root" component={RootRoutes} />
         <RecipesNavigator.Screen name="ViewRecipe" component={ViewRecipe} />
         <RecipesNavigator.Screen name="Category" component={Category} />
+        <RecipesNavigator.Screen name="Search" component={SearchRecipes} />
       </RecipesNavigator.Navigator>
     </NavigationContainer>
   );

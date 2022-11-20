@@ -71,17 +71,10 @@ export function Recipes() {
           <>
             <Grettings>Confira o que você pode cozinhar hoje!</Grettings>
 
-            <SearchArea>
+            <SearchArea onPress={() => navigation.navigate("Search")}>
               <MagnifyingGlass color="#878787" />
 
-              <SearchInput
-                placeholder="Buscar receita"
-                placeholderTextColor="#878787"
-              />
-
-              {/* <VoiceSeachButton>
-                <Microphone color="#6A6A6A" />
-              </VoiceSeachButton> */}
+              <SearchInput>Buscar receita</SearchInput>
             </SearchArea>
 
             <View>

@@ -10,6 +10,7 @@ export declare global {
       Category: {
         category: string;
       };
+      Search: undefined;
     }
   }
 }

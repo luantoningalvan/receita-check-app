@@ -18,7 +18,7 @@ export const Grettings = styled.Text`
   max-width: 300px;
 `;
 
-export const SearchArea = styled.View`
+export const SearchArea = styled.TouchableOpacity`
   background: #fff;
   height: ${RFValue(44)}px;
   border-radius: ${RFValue(22)}px;
@@ -28,10 +28,11 @@ export const SearchArea = styled.View`
   margin: ${RFValue(20)}px 0px;
 `;
 
-export const SearchInput = styled.TextInput`
+export const SearchInput = styled.Text`
   flex: 1;
   margin: 0px 16px;
   font-size: ${RFValue(14)}px;
+  color: #878787;
 `;
 
 export const VoiceSeachButton = styled.TouchableOpacity``;
