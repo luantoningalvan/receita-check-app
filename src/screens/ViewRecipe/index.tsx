@@ -13,6 +13,7 @@ import {
   FloatingCounter,
   SectionTitle,
   HeaderTop,
+  RecipeCheckText,
 } from "./styles";
 import { Recipe } from "../../common/interfaces/Recipe";
 import {
@@ -199,9 +200,15 @@ export function ViewRecipe(props: any) {
 
             <RecipeCheck state={candDoIt}>
               {candDoIt ? (
-                <ThumbsUp color="#fff" size={22} />
+                <>
+                  <RecipeCheckText>Tenho tudo?</RecipeCheckText>
+                  <ThumbsUp color="#fff" />
+                </>
               ) : (
-                <ThumbsDown color="#fff" size={22} />
+                <>
+                  <RecipeCheckText>Tenho tudo?</RecipeCheckText>
+                  <ThumbsDown color="#fff" />
+                </>
               )}
             </RecipeCheck>
           </RecipeInfos>

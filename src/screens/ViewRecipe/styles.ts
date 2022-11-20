@@ -51,12 +51,18 @@ export const Info = styled.View`
 `;
 
 export const RecipeCheck = styled.View<{ state: boolean }>`
-  width: 28px;
   height: 28px;
-  background: ${({ state }) => (state ? "#3bc651" : "#D8A729")};
+  background: ${({ state }) => (state ? "#3bc651" : "#e33627")};
   border-radius: 14px;
   align-items: center;
   justify-content: center;
+  padding: 0px 8px;
+  flex-direction: row;
+`;
+
+export const RecipeCheckText = styled.Text`
+  color: #fff;
+  margin-right: 8px;
 `;
 
 export const IngredientsList = styled(BottomSheetFlatList).attrs({
