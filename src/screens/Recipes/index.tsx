@@ -55,6 +55,9 @@ export function Recipes() {
           setEmptyIngredientsList(true);
           setRecipes([]);
         }
+      } else {
+        setEmptyIngredientsList(true);
+        setRecipes([]);
       }
     } catch (error) {
       Alert.alert("Houve um erro ao tentar comunicar nossos servidores");
